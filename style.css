@@ -300,7 +300,7 @@ body {
     font-weight: 500;
 }
 
-.stars, .forks, .fork-source {
+.stars, .forks {
     color: var(--text-secondary);
     padding: 4px 12px;
     background: var(--secondary-color);
@@ -322,8 +322,7 @@ body {
     font-size: 14px;
 }
 
-.btn-view-branches,
-.btn-create-fork {
+.btn-view-branches {
     background: var(--primary-color);
     color: white;
     border: none;
@@ -335,8 +334,7 @@ body {
     transition: all 0.3s ease;
 }
 
-.btn-view-branches:hover,
-.btn-create-fork:hover {
+.btn-view-branches:hover {
     background: var(--primary-hover);
     transform: translateY(-2px);
 }
@@ -420,25 +418,6 @@ body {
 
 .modal-body {
     padding: 24px;
-}
-
-.fork-repo-info {
-    background: var(--secondary-color);
-    padding: 15px;
-    border-radius: var(--radius-sm);
-    margin: 20px 0;
-    font-weight: 500;
-    color: var(--text-primary);
-}
-
-.modal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.modal-actions button {
-    flex: 1;
 }
 
 /* Branch List */
