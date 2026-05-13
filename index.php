@@ -39,7 +39,6 @@ function githubRequest($url, $token = '') {
 
 $repositories = [];
 $branches = [];
-$forks = [];
 $error = '';
 
 if ($token && $username) {
@@ -52,40 +51,6 @@ if ($token && $username) {
         $repositories = [];
     } elseif (!is_array($repositories)) {
         $repositories = [];
-    }
-    
-    // Получение форков пользователя
-    $forks_url = "https://api.github.com/users/{$username}/repos?type=forks&per_page=100";
-    $forks = githubRequest($forks_url, $token);
-    if (!is_array($forks)) {
-        $forks = [];
-    }
-}
-
-// Обработка создания форка
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_fork']) && $token) {
-    $repo_owner = $_POST['repo_owner'];
-    $repo_name = $_POST['repo_name'];
-    
-    $fork_url = "https://api.github.com/repos/{$repo_owner}/{$repo_name}/forks";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $fork_url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'User-Agent: PHP-GitHub-Client',
-        'Authorization: token ' . $token,
-        'Content-Length: 0'
-    ]);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    
-    if ($http_code === 202) {
-        $success_message = 'Форк создан успешно!';
-    } else {
-        $error = 'Ошибка при создании форка: ' . ($response['message'] ?? 'Неизвестная ошибка');
     }
 }
 
@@ -162,7 +127,6 @@ if (isset($_GET['get_branches']) && $token) {
                 <!-- Вкладки -->
                 <div class="tabs">
                     <button class="tab-btn active" data-tab="repositories">Репозитории</button>
-                    <button class="tab-btn" data-tab="forks">Мои форки</button>
                 </div>
                 
                 <!-- Секция репозиториев -->
@@ -193,37 +157,6 @@ if (isset($_GET['get_branches']) && $token) {
                                     <div class="repo-actions">
                                         <a href="<?php echo htmlspecialchars($repo['html_url']); ?>" target="_blank" class="btn-secondary">Открыть</a>
                                         <button class="btn-view-branches" onclick="viewBranches('<?php echo htmlspecialchars($repo['owner']['login']); ?>', '<?php echo htmlspecialchars($repo['name']); ?>')">Ветки</button>
-                                        <button class="btn-create-fork" onclick="showForkModal('<?php echo htmlspecialchars($repo['owner']['login']); ?>', '<?php echo htmlspecialchars($repo['name']); ?>')">Создать форк</button>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                </section>
-                
-                <!-- Секция форков -->
-                <section id="forks" class="tab-content">
-                    <h2>Мои форки</h2>
-                    <?php if (empty($forks)): ?>
-                        <div class="empty-state">
-                            <p>Форки не найдены</p>
-                        </div>
-                    <?php else: ?>
-                        <div class="repo-grid">
-                            <?php foreach ($forks as $fork): ?>
-                                <div class="repo-card">
-                                    <div class="repo-header">
-                                        <svg class="repo-icon" viewBox="0 0 24 24" width="20" height="20">
-                                            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2.09 1.02-2.79-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.7 1.02 1.68 1.02 2.79 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/>
-                                        </svg>
-                                        <h3><?php echo htmlspecialchars($fork['name']); ?></h3>
-                                    </div>
-                                    <p class="repo-description"><?php echo htmlspecialchars($fork['description'] ?? 'Описание отсутствует'); ?></p>
-                                    <div class="repo-meta">
-                                        <span class="fork-source">Форк от <?php echo htmlspecialchars($fork['parent']['owner']['login'] ?? 'unknown'); ?></span>
-                                    </div>
-                                    <div class="repo-actions">
-                                        <a href="<?php echo htmlspecialchars($fork['html_url']); ?>" target="_blank" class="btn-secondary">Открыть</a>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -241,29 +174,6 @@ if (isset($_GET['get_branches']) && $token) {
                     </div>
                     <div class="modal-body" id="branchesList">
                         <div class="loading">Загрузка...</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Модальное окно для создания форка -->
-            <div id="forkModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Создать форк</h3>
-                        <button class="modal-close" onclick="closeModal('forkModal')">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST" id="forkForm">
-                            <input type="hidden" name="create_fork" value="1">
-                            <input type="hidden" name="repo_owner" id="forkRepoOwner">
-                            <input type="hidden" name="repo_name" id="forkRepoName">
-                            <p>Вы собираетесь создать форк репозитория:</p>
-                            <p class="fork-repo-info" id="forkRepoInfo"></p>
-                            <div class="modal-actions">
-                                <button type="button" class="btn-secondary" onclick="closeModal('forkModal')">Отмена</button>
-                                <button type="submit" class="btn-primary">Создать форк</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>

@@ -70,20 +70,6 @@ function viewBranches(owner, repo) {
         });
 }
 
-// Показать модальное окно для создания форка
-function showForkModal(owner, repo) {
-    const modal = document.getElementById('forkModal');
-    const forkRepoOwner = document.getElementById('forkRepoOwner');
-    const forkRepoName = document.getElementById('forkRepoName');
-    const forkRepoInfo = document.getElementById('forkRepoInfo');
-    
-    forkRepoOwner.value = owner;
-    forkRepoName.value = repo;
-    forkRepoInfo.textContent = `${owner} / ${repo}`;
-    
-    modal.classList.add('active');
-}
-
 // Закрытие модального окна
 function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('active');
@@ -102,18 +88,6 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
-
-// Обработка отправки формы создания форка
-document.addEventListener('DOMContentLoaded', function() {
-    const forkForm = document.getElementById('forkForm');
-    if (forkForm) {
-        forkForm.addEventListener('submit', function(e) {
-            const submitBtn = this.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Создание...';
-        });
-    }
-});
 
 // Анимация карточек при скролле
 if ('IntersectionObserver' in window) {
