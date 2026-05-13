@@ -1,0 +1,101 @@
+```
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+dist/
+build/
+target/
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+.env
+.env.local
+.env.*
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Editors
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Python specific
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/
+.mypy_cache/
+.pytest_cache/
+
+# JavaScript/Node specific
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+jspm_packages/
+*.tsbuildinfo
+.nyc_output
+coverage/
+lib-cov
+
+# Web
+.sass-cache/
+connect.lock
+.url
+*.adp
+*.es
+*.es6
+*.frag
+*.glsl
+*.hls
+*.hlsl
+*.js.map
+*.jsx.map
+*.vert
+.npm
+node_modules/
+typings/
+
+# PHP specific
+*.phar
+vendor/
+composer.lock
+.php_cs
+.php_cs.dist
+
+# Frontend build
+dist/
+build/
+*.min.js
+*.min.css
+public/dist/
+```
