@@ -1,0 +1,30 @@
+<?php
+/**
+ * Пример локальных настроек.
+ *
+ * Скопируйте файл в config.local.php и раскомментируйте нужное.
+ * Переменные окружения (GHM_*) имеют приоритет над этим файлом.
+ */
+return array(
+    // Демонстрационный режим: локальный макет GitHub API вместо api.github.com.
+    // 'demo'     => true,
+    // 'api_base' => 'http://127.0.0.1:8090',
+    // 'git_host' => 'http://127.0.0.1:8090',
+
+    // GitHub Enterprise: свой адрес API и git.
+    // 'api_base' => 'https://github.example.com/api/v3',
+    // 'git_host' => 'https://github.example.com',
+
+    // Каталог для рабочих данных (клоны, задания, журнал). Должен быть вне веб-каталога.
+    // 'data_dir' => '/var/lib/ghm',
+
+    // Путь к bundle корневых сертификатов, если автопоиск не сработал.
+    // 'ca_bundle' => '/etc/ssl/certs/ca-certificates.crt',
+
+    // Свой бинарник git (например, если в PATH нет git).
+    // 'git_binary' => '/usr/bin/git',
+
+    // Таймауты операций, сек.
+    // 'clone_timeout' => 900,
+    // 'push_timeout'  => 900,
+);

@@ -1,0 +1,40 @@
+# GitHub Manager — настройки для Apache (2.4+).
+#
+# Файл не обязателен: приложение работает и без него, но с ним закрыты
+# служебные каталоги и добавлены базовые заголовки безопасности.
+
+# Каталог с листингом файлов наружу не отдаём.
+Options -Indexes
+
+# .git, служебные каталоги и файлы настроек недоступны из браузера.
+RedirectMatch 404 /\.git
+RedirectMatch 404 /\.gitignore$
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # tests/ и lib/ — только для серверного включения, не для прямых запросов.
+    RewriteRule ^(tests|lib)/ - [F,L]
+</IfModule>
+
+<IfModule mod_authz_core.c>
+    <FilesMatch "^(config\.local\.php|config\.local\.php\.example|composer\.(json|lock))$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    # Токен и CSRF живут только в сессии, поэтому страницы не кэшируем.
+    <FilesMatch "\.(php)$">
+        Header always set Cache-Control "no-store, max-age=0"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 7 days"
+    ExpiresByType application/javascript "access plus 7 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+</IfModule>

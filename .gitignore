@@ -106,3 +106,4 @@ build/
 *.tar.xz
 *.tar.zst
 ```
+config.local.php
